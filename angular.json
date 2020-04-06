@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "money-tracker-dashboard": {
+    "angular-firebase-template": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,20 +17,23 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/money-tracker-dashboard",
+            "outputPath": "dist/angular-firebase-template",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
-              "src/styles.sass"
+              "src/styles.sass",
+              "src/assets/bootstrap/css/bootstrap.min.css",
+              "src/assets/fonts/fontawesome-all.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/theme.js",
+              "src/assets/bootstrap/js/bootstrap.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -67,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "money-tracker-dashboard:build"
+            "browserTarget": "angular-firebase-template:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "money-tracker-dashboard:build:production"
+              "browserTarget": "angular-firebase-template:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "money-tracker-dashboard:build"
+            "browserTarget": "angular-firebase-template:build"
           }
         },
         "test": {
@@ -88,42 +91,32 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.sass"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.sass"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json", "e2e/tsconfig.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "money-tracker-dashboard:serve"
+            "devServerTarget": "angular-firebase-template:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "money-tracker-dashboard:serve:production"
+              "devServerTarget": "angular-firebase-template:serve:production"
             }
           }
         }
       }
-    }},
-  "defaultProject": "money-tracker-dashboard"
+    }
+  },
+  "defaultProject": "angular-firebase-template"
 }

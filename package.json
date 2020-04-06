@@ -1,5 +1,5 @@
 {
-  "name": "money-tracker-dashboard",
+  "name": "angular-firebase-template",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
   "private": true,
   "dependencies": {
