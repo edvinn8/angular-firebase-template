@@ -11,7 +11,7 @@ describe('SignupComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, HttpClientModule],
-      declarations: [SignupComponent],
+      declarations: [SignupComponent]
     }).compileComponents()
   }))
 

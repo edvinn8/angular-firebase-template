@@ -14,46 +14,46 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/dashboard',
+    redirectTo: '/dashboard'
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'table',
     component: TableComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',
     component: AuthComponent,
-    canActivate: [ReverseAuthGuard],
+    canActivate: [ReverseAuthGuard]
   },
   {
     path: 'signup',
     component: SignupComponent,
-    canActivate: [ReverseAuthGuard],
+    canActivate: [ReverseAuthGuard]
   },
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent,
-    canActivate: [ReverseAuthGuard],
+    canActivate: [ReverseAuthGuard]
   },
   {
     path: '**',
-    component: NotFoundComponent,
-  },
+    component: NotFoundComponent
+  }
 ]
 
 @NgModule({
   imports: [RouterModule, RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

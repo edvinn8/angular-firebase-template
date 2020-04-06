@@ -11,7 +11,7 @@ describe('NotFoundComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, RouterModule],
-      declarations: [NotFoundComponent],
+      declarations: [NotFoundComponent]
     }).compileComponents()
   }))
 

@@ -9,7 +9,7 @@ describe('ProfileComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ProfileComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule]
     }).compileComponents()
   }))
 

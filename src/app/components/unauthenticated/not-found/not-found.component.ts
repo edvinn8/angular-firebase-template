@@ -5,7 +5,7 @@ import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-not-found',
-  template: '',
+  template: ''
 })
 export class NotFoundComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}

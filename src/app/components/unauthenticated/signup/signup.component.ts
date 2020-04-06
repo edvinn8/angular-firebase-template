@@ -5,7 +5,7 @@ import { AuthService } from '../auth/auth.service'
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.sass'],
+  styleUrls: ['./signup.component.sass']
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup
@@ -20,10 +20,10 @@ export class SignupComponent implements OnInit {
       passwords: this.fb.group(
         {
           password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-          repeatPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+          repeatPassword: new FormControl('', [Validators.required, Validators.minLength(6)])
         },
         { validator: this.equalPasswords }
-      ),
+      )
     })
   }
 

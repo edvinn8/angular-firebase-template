@@ -30,16 +30,16 @@ import { NotFoundComponent } from './components/unauthenticated/not-found/not-fo
     SignupComponent,
     ForgotPasswordComponent,
     AuthComponent,
-    NotFoundComponent,
+    NotFoundComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
-      multi: true,
-    },
+      multi: true
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

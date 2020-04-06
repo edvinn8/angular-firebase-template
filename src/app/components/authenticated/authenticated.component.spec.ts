@@ -10,7 +10,7 @@ describe('AuthenticatedComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [SidebarComponent, HeaderComponent],
-      declarations: [AuthenticatedComponent],
+      declarations: [AuthenticatedComponent]
     }).compileComponents()
   }))
 

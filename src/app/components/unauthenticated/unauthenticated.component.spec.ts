@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { UnauthenticatedComponent } from './unauthenticated.component';
+import { UnauthenticatedComponent } from './unauthenticated.component'
 
 describe('UnauthenticatedComponent', () => {
-  let component: UnauthenticatedComponent;
-  let fixture: ComponentFixture<UnauthenticatedComponent>;
+  let component: UnauthenticatedComponent
+  let fixture: ComponentFixture<UnauthenticatedComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UnauthenticatedComponent ]
-    })
-    .compileComponents();
-  }));
+      declarations: [UnauthenticatedComponent]
+    }).compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UnauthenticatedComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(UnauthenticatedComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})
