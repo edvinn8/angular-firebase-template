@@ -12,9 +12,10 @@ export class User extends DatabaseEntry {
     id: string,
     displayName: string,
     _token: string,
-    _tokenExpirationDate: Date
+    _tokenExpirationDate: Date,
+    databaseId?: string
   ) {
-    super(id)
+    super(databaseId)
     this.email = email
     this.id = id
     this._token = _token

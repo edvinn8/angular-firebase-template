@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { catchError, tap, take } from 'rxjs/operators'
-import { throwError, BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, Observable, throwError } from 'rxjs'
+import { catchError, take, tap } from 'rxjs/operators'
+import { UserService } from 'src/app/services/user/user.service'
 import { settings } from '../../../shared/config'
-
 import { User } from './user.model'
 
 export interface AuthResponseData {
@@ -19,18 +19,20 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  user = new BehaviorSubject<User>(null)
+  private userSubject = new BehaviorSubject<User>(null)
+  public user$ = this.userSubject.asObservable()
   private tokenExpirationTimer: any
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private userService: UserService, private router: Router) {}
 
-  API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:'
   API_KEY = settings.apiConfig.apiKey
 
   signupOrLogin(email: string, password: string, displayName?: string) {
     return this.http
       .post<AuthResponseData>(
-        `${this.API_URL}${displayName ? 'signUp' : 'signInWithPassword'}?key=${this.API_KEY}`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:${
+          displayName ? 'signUp' : 'signInWithPassword'
+        }?key=${this.API_KEY}`,
         {
           email: email,
           password: password,
@@ -60,6 +62,7 @@ export class AuthService {
       _token: string
       _tokenExpirationDate: string
     } = JSON.parse(localStorage.getItem('userData'))
+
     if (!userData) {
       return
     }
@@ -71,17 +74,33 @@ export class AuthService {
       userData._token,
       new Date(userData._tokenExpirationDate)
     )
+    this.userSubject.next(loadedUser)
+    this.verifyToken(userData._token).subscribe(
+      () => {
+        if (loadedUser.token) {
+          const expirationDuration =
+            new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
+          this.autoLogout(expirationDuration)
+        }
+      },
+      // TODO: error handling
+      () => this.logout()
+    )
+  }
 
-    if (loadedUser.token) {
-      this.user.next(loadedUser)
-      const expirationDuration =
-        new Date(userData._tokenExpirationDate).getTime() - new Date().getTime()
-      this.autoLogout(expirationDuration)
-    }
+  verifyToken(idToken: string) {
+    return this.http
+      .post(
+        `https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=${this.API_KEY}`,
+        {
+          idToken
+        }
+      )
+      .pipe(take(1), catchError(this.handleError))
   }
 
   logout() {
-    this.user.next(null)
+    this.userSubject.next(null)
     this.router.navigate(['/login'])
     localStorage.removeItem('userData')
     if (this.tokenExpirationTimer) {
@@ -104,11 +123,27 @@ export class AuthService {
     expiresIn: number
   ) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000)
+
+    // log in as soon as possible to reflect in the app and enable interceptor
     const user = new User(email, userId, displayName, token, expirationDate)
-    this.user.next(user)
+    this.userSubject.next(user)
     this.router.navigate(['/dashboard'])
     this.autoLogout(expiresIn * 1000)
-    localStorage.setItem('userData', JSON.stringify(user))
+
+    // add or get info to database
+    const obs = displayName ? this.userService.insertUser(user) : this.userService.getUser(userId)
+    obs.subscribe((dbUserData) => {
+      const newUser = new User(
+        dbUserData.email,
+        dbUserData.id,
+        dbUserData.displayName,
+        token,
+        expirationDate,
+        dbUserData.databaseId
+      )
+      this.userSubject.next(newUser)
+      localStorage.setItem('userData', JSON.stringify(newUser))
+    })
   }
 
   private handleError(errorRes: HttpErrorResponse) {
@@ -128,5 +163,9 @@ export class AuthService {
         break
     }
     return throwError(errorMessage)
+  }
+
+  getLoggedInUser(): Observable<User> {
+    return this.userSubject.pipe(take(1))
   }
 }

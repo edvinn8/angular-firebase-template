@@ -1,48 +1,72 @@
-// import { Injectable } from '@angular/core';
-// import { HttpClient, HttpParams } from '@angular/common/http';
-// import { map, tap, take, exhaustMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { map, take } from 'rxjs/operators'
+import { settings } from '../shared/config'
+import { throwError, Observable } from 'rxjs'
 
-// import { Recipe } from '../recipes/recipe.model';
-// import { RecipeService } from '../recipes/recipe.service';
-// import { AuthService } from '../auth/auth.service';
+@Injectable({ providedIn: 'root' })
+export class DataStorageService {
+  private DATABASE_URL = settings.apiConfig.databaseURL
 
-// @Injectable({ providedIn: 'root' })
-// export class DataStorageService {
-//   constructor(
-//     private http: HttpClient,
-//     private recipeService: RecipeService,
-//     private authService: AuthService
-//   ) {}
+  constructor(private http: HttpClient) {}
 
-//   storeRecipes() {
-//     const recipes = this.recipeService.getRecipes();
-//     this.http
-//       .put(
-//         'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json',
-//         recipes
-//       )
-//       .subscribe(response => {
-//         console.log(response);
-//       });
-//   }
+  getItem(subUrl: string, itemDatabaseId: string): Observable<any> {
+    return this.http.get(`${this.DATABASE_URL}/${subUrl}/${itemDatabaseId}.json`).pipe(
+      take(1),
+      map((items) => {
+        return Object.entries(items)
+          .map((item) => {
+            return {
+              ...item[1],
+              databaseId: item[0]
+            }
+          })
+          .pop()
+      })
+    )
+  }
 
-//   fetchRecipes() {
-//     return this.http
-//       .get<Recipe[]>(
-//         'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json'
-//       )
-//       .pipe(
-//         map(recipes => {
-//           return recipes.map(recipe => {
-//             return {
-//               ...recipe,
-//               ingredients: recipe.ingredients ? recipe.ingredients : []
-//             };
-//           });
-//         }),
-//         tap(recipes => {
-//           this.recipeService.setRecipes(recipes);
-//         })
-//       );
-//   }
-// }
+  insertItem(subUrl: string, item: any) {
+    return this.http.post<{ name: string }>(`${this.DATABASE_URL}/${subUrl}.json`, item).pipe(
+      take(1),
+      map((res) => {
+        return {
+          ...item,
+          databaseId: res.name
+        }
+      })
+    )
+  }
+
+  updateItem(subUrl: string, item: any) {
+    if (!item.databaseId) {
+      return throwError('Missing databaseId on the updated property')
+    }
+    return this.http
+      .put<any[]>(`${this.DATABASE_URL}/${subUrl}/${item.databaseId}/.json`, item)
+      .pipe(take(1))
+  }
+
+  deleteItem(subUrl: string, item: any) {
+    if (!item.databaseId) {
+      return throwError('Missing databaseId on the updated property')
+    }
+    return this.http
+      .delete<any[]>(`${this.DATABASE_URL}/${subUrl}/${item.databaseId}.json`)
+      .pipe(take(1))
+  }
+
+  getItems(subUrl: string) {
+    return this.http.get<any[]>(`${this.DATABASE_URL}/${subUrl}.json`).pipe(
+      take(1),
+      map((items) => {
+        return Object.entries(items).map((item) => {
+          return {
+            ...item[1],
+            databaseId: item[0]
+          }
+        })
+      })
+    )
+  }
+}

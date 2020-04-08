@@ -11,7 +11,7 @@ export class NotFoundComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.authService.user.pipe(take(1)).subscribe((user) => {
+    this.authService.user$.pipe(take(1)).subscribe((user) => {
       this.router.navigate([!!user ? '/dashboard' : 'login'])
     })
   }

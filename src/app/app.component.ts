@@ -13,6 +13,8 @@ export class AppComponent {
 
   constructor(private authService: AuthService) {
     this.authService.autoLogin()
-    this.authService.user.subscribe((user) => (this.authenticated = !!user))
+    this.authService.user$.subscribe((user) => {
+      this.authenticated = !!user
+    })
   }
 }
