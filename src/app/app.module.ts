@@ -18,9 +18,10 @@ import { AuthInterceptorService } from './components/unauthenticated/auth/auth-i
 import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
 
 // Import AngularFire
-import { AngularFireModule } from 'angularfire2'
-import { AngularFireAuthModule } from 'angularfire2/auth'
-import { AngularFireDatabaseModule } from 'angularfire2/database'
+import { AngularFireModule } from '@angular/fire'
+// import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireDatabaseModule } from '@angular/fire/database'
+import { AngularFireAuthModule } from '@angular/fire/auth'
 
 import { settings } from '../app/shared/config'
 @NgModule({
