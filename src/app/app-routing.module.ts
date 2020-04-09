@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core'
+import { canActivate, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 import { RouterModule, Routes } from '@angular/router'
 import { DashboardComponent } from './components/authenticated/dashboard/dashboard.component'
 import { ProfileComponent } from './components/authenticated/profile/profile.component'
 import { TableComponent } from './components/authenticated/table/table.component'
 import { AuthComponent } from './components/unauthenticated/auth/auth.component'
-import { AuthGuard } from './components/unauthenticated/auth/auth.guard'
 import { ForgotPasswordComponent } from './components/unauthenticated/forgot-password/forgot-password.component'
 import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
 import { SignupComponent } from './components/unauthenticated/signup/signup.component'
-import { ReverseAuthGuard } from './components/unauthenticated/auth/reverse-auth.guard'
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/login'])
+const redirectLoggedInToDashboard = () => redirectLoggedInTo(['/dashboard'])
 
 const routes: Routes = [
   {
@@ -19,32 +21,32 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [AuthGuard]
+    ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: 'table',
     component: TableComponent,
-    canActivate: [AuthGuard]
+    ...canActivate(redirectUnauthorizedToLogin)
   },
   {
     path: 'login',
     component: AuthComponent,
-    canActivate: [ReverseAuthGuard]
+    ...canActivate(redirectLoggedInToDashboard)
   },
   {
     path: 'signup',
     component: SignupComponent,
-    canActivate: [ReverseAuthGuard]
+    ...canActivate(redirectLoggedInToDashboard)
   },
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent,
-    canActivate: [ReverseAuthGuard]
+    ...canActivate(redirectLoggedInToDashboard)
   },
   {
     path: '**',

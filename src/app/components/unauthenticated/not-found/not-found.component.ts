@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core'
-import { AuthService } from '../auth/auth.service'
 import { take } from 'rxjs/operators'
 import { Router } from '@angular/router'
+import { AngularFireAuth } from '@angular/fire/auth'
 
 @Component({
   selector: 'app-not-found',
   template: ''
 })
 export class NotFoundComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private afAuth: AngularFireAuth, private router: Router) {}
 
   ngOnInit() {
-    this.authService.user$.pipe(take(1)).subscribe((user) => {
+    this.afAuth.authState.pipe(take(1)).subscribe((user) => {
       this.router.navigate([!!user ? '/dashboard' : 'login'])
     })
   }

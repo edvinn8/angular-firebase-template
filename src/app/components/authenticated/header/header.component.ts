@@ -1,26 +1,28 @@
 import { DOCUMENT } from '@angular/common'
-import { Component, Inject, OnInit, Renderer2, HostListener } from '@angular/core'
-import { AuthService } from '../../unauthenticated/auth/auth.service'
-import { User } from '../../unauthenticated/auth/user.model'
+import { Component, HostListener, Inject, OnInit, Renderer2, OnDestroy } from '@angular/core'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { take } from 'rxjs/operators'
 import { SidebarService } from '../sidebar/sidebar.service'
+import { Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.sass']
 })
-export class HeaderComponent implements OnInit {
-  loggedInUser: User
+export class HeaderComponent implements OnInit, OnDestroy {
+  loggedInUser: firebase.User
+  subscription: Subscription
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private authService: AuthService,
+    private afAuth: AngularFireAuth,
     private renderer: Renderer2,
     private sidebarService: SidebarService
   ) {}
 
   ngOnInit() {
-    this.sidebarService.sidebarToggled$.subscribe((sidebarToggled) => {
+    this.subscription = this.sidebarService.sidebarToggled$.subscribe((sidebarToggled) => {
       this.renderer[sidebarToggled ? 'addClass' : 'removeClass'](
         this.document.body,
         'sidebar-toggled'
@@ -30,8 +32,11 @@ export class HeaderComponent implements OnInit {
         'toggled'
       )
     })
+    this.afAuth.authState.pipe(take(1)).subscribe((user) => (this.loggedInUser = user))
+  }
 
-    this.authService.user$.subscribe((user) => (this.loggedInUser = user))
+  ngOnDestroy() {
+    this.subscription.unsubscribe()
   }
 
   toggleSidebar() {
@@ -40,13 +45,11 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    console.log('event.target.innerWidth: ', event.target.innerWidth)
     if (event.target.innerWidth < 768) {
       this.sidebarService.collapseSidebar()
     }
   }
-
   logout() {
-    this.authService.logout()
+    this.afAuth.signOut()
   }
 }

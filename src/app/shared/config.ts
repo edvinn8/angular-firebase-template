@@ -22,6 +22,14 @@ export const settings = {
     },
     footer: {
       brand: 'Edvin'
+    },
+    loginOptions: {
+      google: {
+        display: true
+      },
+      facebook: {
+        display: false
+      }
     }
   }
 }

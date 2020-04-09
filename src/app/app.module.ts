@@ -1,7 +1,14 @@
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
+// Import AngularFire
+import { AngularFireModule } from '@angular/fire'
+import { AngularFireAuthModule } from '@angular/fire/auth'
+import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard'
+// import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireDatabaseModule } from '@angular/fire/database'
 import { ReactiveFormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
+import { settings } from '../app/shared/config'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { AuthenticatedComponent } from './components/authenticated/authenticated.component'
@@ -12,10 +19,10 @@ import { SidebarComponent } from './components/authenticated/sidebar/sidebar.com
 import { TableComponent } from './components/authenticated/table/table.component'
 import { AuthComponent } from './components/unauthenticated/auth/auth.component'
 import { ForgotPasswordComponent } from './components/unauthenticated/forgot-password/forgot-password.component'
+import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
 import { SignupComponent } from './components/unauthenticated/signup/signup.component'
 import { UnauthenticatedComponent } from './components/unauthenticated/unauthenticated.component'
-import { AuthInterceptorService } from './components/unauthenticated/auth/auth-interceptor.service'
-import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,13 +39,16 @@ import { NotFoundComponent } from './components/unauthenticated/not-found/not-fo
     AuthComponent,
     NotFoundComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptorService,
-      multi: true
-    }
+  imports: [
+    // Init Firebase with environment configuration
+    AngularFireModule.initializeApp(settings.apiConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    AngularFireAuthGuardModule,
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   bootstrap: [AppComponent]
 })

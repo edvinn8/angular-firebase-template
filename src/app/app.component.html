@@ -1,4 +1,6 @@
-<app-authenticated *ngIf="authenticated; else unauthenticated"></app-authenticated>
-<ng-template #unauthenticated>
-  <app-unauthenticated></app-unauthenticated>
-</ng-template>
+<ng-container *ngIf="!loading">
+  <app-authenticated *ngIf="!!user; else unauthenticated"></app-authenticated>
+  <ng-template #unauthenticated>
+    <app-unauthenticated></app-unauthenticated>
+  </ng-template>
+</ng-container>
