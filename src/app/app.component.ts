@@ -1,5 +1,6 @@
 import { Component } from '@angular/core'
-import { AuthService } from './components/unauthenticated/auth/auth.service'
+import { AngularFireAuth } from '@angular/fire/auth'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -8,13 +9,20 @@ import { AuthService } from './components/unauthenticated/auth/auth.service'
 })
 export class AppComponent {
   title = 'angular-firebase-template'
+  loading: boolean
+  user: firebase.User
 
-  authenticated = false
-
-  constructor(private authService: AuthService) {
-    this.authService.autoLogin()
-    this.authService.user$.subscribe((user) => {
-      this.authenticated = !!user
+  constructor(private afAuth: AngularFireAuth, private router: Router) {
+    this.loading = true
+    afAuth.authState.subscribe((user) => {
+      console.log('this.afAuth.authState changed', user)
+      this.user = user
+      this.loading = false
+      if (user) {
+        this.router.navigate(['/dashboard'])
+      } else {
+        this.router.navigate(['/login'])
+      }
     })
   }
 }

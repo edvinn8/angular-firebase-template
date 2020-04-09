@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 // Import Firebase and AngularFire
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFireDatabase } from '@angular/fire/database'
 import { Observable } from 'rxjs'
-import { AuthService } from '../../unauthenticated/auth/auth.service'
+import { AngularFireDatabase } from '@angular/fire/database'
 
 @Component({
   selector: 'app-dashboard',
@@ -13,32 +12,27 @@ import { AuthService } from '../../unauthenticated/auth/auth.service'
 export class DashboardComponent implements OnInit {
   public authInfo: Observable<firebase.User>
   messageListRef: firebase.database.Reference
+  displayData: any
 
-  constructor(
-    private afAuth: AngularFireAuth,
-    private authService: AuthService,
-    private database: AngularFireDatabase
-  ) {
+  constructor(private afAuth: AngularFireAuth, private afDatabase: AngularFireDatabase) {
     this.authInfo = this.afAuth.authState
   }
 
   ngOnInit() {
-    // firebase.auth().onAuthStateChanged
-    this.authService.getLoggedInUser().subscribe((usree) => {
-      this.messageListRef = this.database.database.ref('message_list/' + usree.id)
-      this.messageListRef.on('value', (snapshot) => {
-        var data = snapshot.val() // "last"
-        console.log('data: ', data)
-      })
+    this.afAuth.authState.subscribe((usree) => {
+      if (usree) {
+        this.messageListRef = this.afDatabase.database.ref('message_list/' + usree.uid)
+        this.messageListRef.on('value', (snapshot) => {
+          var data = snapshot.val() // "last"
+          this.displayData = Object.values(data)
+          console.log('data: ', data)
+        })
+      }
     })
   }
 
   test() {
-    this.messageListRef.push({
-      user_id: 'ada',
-      text:
-        'The Analytical Engine weaves algebraical patterns just as the Jacquard loom weaves flowers and leaves.'
-    })
+    this.displayData = this.displayData.splice()
     //   .then(function (snapshot) {
     //   var key = snapshot.key // "ada"
     //   console.log('key: ', key)
@@ -46,12 +40,12 @@ export class DashboardComponent implements OnInit {
     //   console.log('data: ', data)
     // })
     // console.log('messageListRef.toJSON(): ', messageListRef.ref.toJSON())
-    // var newMessageRef = messageListRef.push()
-    // newMessageRef.set({
-    //   user_id: 'ada',
-    //   text:
-    //     'The Analytical Engine weaves algebraical patterns just as the Jacquard loom weaves flowers and leaves.'
-    // })
+    var newMessageRef = this.messageListRef.push()
+    newMessageRef.set({
+      user_id: 'ada',
+      text:
+        'The Analytical Engine weaves algebraical patterns just as the Jacquard loom weaves flowers and leaves.'
+    })
     // We've appended a new message to the message_list location.
     // var path = newMessageRef.toString()
     // console.log('path: ', path)

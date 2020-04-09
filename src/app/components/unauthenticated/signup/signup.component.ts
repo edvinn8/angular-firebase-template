@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
-import { AuthService } from '../auth/auth.service'
+import { AngularFireAuth } from '@angular/fire/auth'
 
 @Component({
   selector: 'app-signup',
@@ -9,8 +9,9 @@ import { AuthService } from '../auth/auth.service'
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup
+  errorMsg: string
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(private fb: FormBuilder, private afAuth: AngularFireAuth) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group({
@@ -36,12 +37,13 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     const formValue = this.signupForm.value
-    this.authService
-      .signupOrLogin(
-        formValue.email,
-        formValue.passwords.password,
-        `${formValue.firstName} ${formValue.lastName}`
-      )
-      .subscribe((res) => console.log('res: ', res))
+    this.afAuth
+      .createUserWithEmailAndPassword(formValue.email, formValue.passwords.password)
+      .then((userCredential) => {
+        userCredential.user.updateProfile({
+          displayName: `${formValue.firstName} ${formValue.lastName}`
+        })
+      })
+      .catch((err) => (this.errorMsg = err))
   }
 }
