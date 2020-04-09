@@ -16,6 +16,13 @@ import { SignupComponent } from './components/unauthenticated/signup/signup.comp
 import { UnauthenticatedComponent } from './components/unauthenticated/unauthenticated.component'
 import { AuthInterceptorService } from './components/unauthenticated/auth/auth-interceptor.service'
 import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
+
+// Import AngularFire
+import { AngularFireModule } from 'angularfire2'
+import { AngularFireAuthModule } from 'angularfire2/auth'
+import { AngularFireDatabaseModule } from 'angularfire2/database'
+
+import { settings } from '../app/shared/config'
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +39,16 @@ import { NotFoundComponent } from './components/unauthenticated/not-found/not-fo
     AuthComponent,
     NotFoundComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule],
+  imports: [
+    // Init Firebase with environment configuration
+    AngularFireModule.initializeApp(settings.apiConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
