@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "pretty": "prettier --write \"./**/*.{html,ts,js,jsx,json}\""
+    "pretty-all": "prettier --write \"./**/*.{html,ts,js,jsx,json}\"",
+    "prepare-deploy": "ng build --prod --output-path docs --base-href /angular-firebase-template/"
   },
   "private": true,
   "dependencies": {
