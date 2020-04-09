@@ -32,10 +32,6 @@ MIT
 @angular/fire
 MIT
 
-@angular/fire/auth
-
-@angular/fire/database
-
 @angular/forms
 MIT
 
