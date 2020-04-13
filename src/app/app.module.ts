@@ -1,11 +1,8 @@
 import { HttpClientModule } from '@angular/common/http'
 import { NgModule } from '@angular/core'
-// Import AngularFire
 import { AngularFireModule } from '@angular/fire'
 import { AngularFireAuthModule } from '@angular/fire/auth'
 import { AngularFireAuthGuardModule } from '@angular/fire/auth-guard'
-// import { AngularFirestoreModule } from "@angular/fire/firestore";
-import { AngularFireDatabaseModule } from '@angular/fire/database'
 import { ReactiveFormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
 import { settings } from '../app/shared/config'
@@ -22,6 +19,7 @@ import { ForgotPasswordComponent } from './components/unauthenticated/forgot-pas
 import { NotFoundComponent } from './components/unauthenticated/not-found/not-found.component'
 import { SignupComponent } from './components/unauthenticated/signup/signup.component'
 import { UnauthenticatedComponent } from './components/unauthenticated/unauthenticated.component'
+import { AngularFirestoreModule } from '@angular/fire/firestore'
 
 @NgModule({
   declarations: [
@@ -43,8 +41,8 @@ import { UnauthenticatedComponent } from './components/unauthenticated/unauthent
     // Init Firebase with environment configuration
     AngularFireModule.initializeApp(settings.apiConfig),
     AngularFireAuthModule,
-    AngularFireDatabaseModule,
     AngularFireAuthGuardModule,
+    AngularFirestoreModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,

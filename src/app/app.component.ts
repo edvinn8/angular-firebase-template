@@ -15,7 +15,6 @@ export class AppComponent {
   constructor(private afAuth: AngularFireAuth, private router: Router) {
     this.loading = true
     afAuth.authState.subscribe((user) => {
-      console.log('this.afAuth.authState changed', user)
       this.user = user
       this.loading = false
       if (user) {
