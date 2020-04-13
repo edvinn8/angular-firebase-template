@@ -1,6 +1,12 @@
 # AngularFirebaseTemplate
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.20.
+## Before running the app
+
+Make sure you have added your Firebase config to the `src/app/shared/config.ts` file.
+
+## Live Demo on Github Pages
+
+[Angular Firebase Template](https://edvinn8.github.io/angular-firebase-template/)
 
 ## Development server
 
