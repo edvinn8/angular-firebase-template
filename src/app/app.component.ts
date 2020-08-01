@@ -12,7 +12,7 @@ export class AppComponent {
   loading: boolean
   user: firebase.User
 
-  constructor(private afAuth: AngularFireAuth, private router: Router) {
+  constructor(afAuth: AngularFireAuth, private router: Router) {
     this.loading = true
     afAuth.authState.subscribe((user) => {
       this.user = user
